@@ -44,6 +44,7 @@ def main(args):
         mkdir_p(args.checkpoint)
 
     # create model
+    print("The model is running on {}".format(device))
     print("==> creating model '{}', stacks={}, blocks={}".format(args.arch, args.stacks, args.blocks))
     model = models.__dict__[args.arch](num_stacks=args.stacks, num_blocks=args.blocks, 
                                     num_classes=args.num_classes, model_inplane=args.model_inplane)
@@ -111,7 +112,7 @@ def main(args):
 
     if args.evaluate:
         print('\nEvaluation only')
-        loss, acc, predictions = validate(val_loader, model, criterion, args.num_classes, 
+        loss, acc, predictions = test(val_loader, model, criterion, args.num_classes, 
                                             args.debug, args.flip, out_res)
         save_pred(predictions, checkpoint=args.checkpoint)
         return
@@ -135,15 +136,15 @@ def main(args):
         train_loss, train_acc = train(train_loader, model, criterion, 
                                     optimizer, args.debug, args.flip, out_res)
         # evaluate on test set
-        valid_loss, valid_acc, predictions = validate(test_loader, model, criterion, args.num_classes,
+        test_loss, test_acc, predictions = test(test_loader, model, criterion, args.num_classes,
                                                       args.debug, args.flip, out_res)
 
         # append logger file
-        logger.append([epoch + 1, lr, train_loss, valid_loss, train_acc, valid_acc])
+        logger.append([epoch + 1, lr, train_loss, test_loss, train_acc, test_acc])
 
         # remember best acc and save checkpoint
         is_best = train_acc > best_acc -0.00001
-        best_acc = max(valid_acc, best_acc)
+        best_acc = max(test_acc, best_acc)
         save_checkpoint({
             'epoch': epoch + 1,
             'arch': args.arch,
@@ -232,23 +233,23 @@ def train(train_loader, model, criterion, optimizer, debug=False, flip=False, ou
     return losses.avg, acces.avg
 
 
-def validate(val_loader, model, criterion, num_classes, debug=False, flip=False, out_res=64):
+def test(loader, model, criterion, num_classes, debug=False, flip=False, out_res=64):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
     acces = AverageMeter()
 
     # predictions
-    predictions = torch.Tensor(val_loader.dataset.__len__(), num_classes, 2)
-    ground_truth = torch.Tensor(val_loader.dataset.__len__(), num_classes, 2)
+    predictions = torch.Tensor(loader.dataset.__len__(), num_classes, 2)
+    ground_truth = torch.Tensor(loader.dataset.__len__(), num_classes, 2)
 
     # switch to evaluate mode
     model.eval()
 
     gt_win, pred_win = None, None
     end = time.time()
-    bar = Bar('Processing', max=len(val_loader))
-    for i, (input, target, meta) in enumerate(val_loader):
+    bar = Bar('Processing', max=len(loader))
+    for i, (input, target, meta) in enumerate(loader):
 
         # measure data loading time
         data_time.update(time.time() - end)
@@ -319,7 +320,7 @@ def validate(val_loader, model, criterion, num_classes, debug=False, flip=False,
         # plot progress
         bar.suffix  = '({batch}/{size}) Data: {data:.6f}s | Batch: {bt:.3f}s | Total: {total:} | ETA: {eta:} | Loss: {loss:.4f} | Acc: {acc: .4f}'.format(
                     batch=i + 1,
-                    size=len(val_loader),
+                    size=len(loader),
                     data=data_time.val,
                     bt=batch_time.avg,
                     total=bar.elapsed_td,
@@ -465,7 +466,7 @@ if __name__ == '__main__':
                         help='LR is multiplied by gamma on schedule.')
     # Data processing
     parser.add_argument('-aug', '--augment', dest='data_aug', action='store_true', default=False,
-                        help='flip the input during validation')
+                        help='augment data')
     parser.add_argument('-f', '--flip', dest='flip', action='store_true',
                         help='flip the input during validation')
     parser.add_argument('--sigma', type=float, default=1,
