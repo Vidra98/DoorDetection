@@ -102,7 +102,7 @@ class HourglassNet(nn.Module):
 
         self.inplanes = inplanes
         ##print('inplane', self.inplanes)
-        self.num_feats = 128
+        self.num_feats = 64
         self.num_stacks = num_stacks
         self.conv1 = nn.Conv2d(3, self.inplanes, kernel_size=7, stride=1, padding=3,
                                bias=True)
@@ -166,7 +166,7 @@ class HourglassNet(nn.Module):
 
         x = self.layer1(x)
         #print('2',x.shape)
-        x = self.maxpool(x)
+        #x = self.maxpool(x)
         #print('3',x.shape)
         x = self.layer2(x)
         #print('4',x.shape)
