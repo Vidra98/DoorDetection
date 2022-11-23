@@ -59,7 +59,7 @@ def main(args):
 
     #define the input and output resolution of the model
     out_res = args.output_res
-    inp_res = 2 * out_res
+    inp_res = out_res
 
     # optionally resume from a checkpoint
     title = 'spsDoor-' + args.arch
