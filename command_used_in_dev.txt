@@ -1,0 +1,25 @@
+TRAINING 256 in -> 64x64 output dim :
+
+CUDA_VISIBLE_DEVICES=0 python3 example/spsDoor.py -a hg --stacks 2 --blocks 1 --checkpoint checkpoint/spsdoor/hg2 --epoch 200 --model_inplane 64
+
+CUDA_VISIBLE_DEVICES=0 python3 example/spsDoor.py -a hg --stacks 1 --blocks 1 --checkpoint checkpoint/spsdoor/conv1_stride_2/hg1 --epoch 200 --model_inplane 64
+
+CUDA_VISIBLE_DEVICES=0 python3 example/spsDoor.py -a hg --stacks 2 --blocks 1 --checkpoint checkpoint/spsdoor/conv1_stride_2/hg2 --epoch 200 --model_inplane 64
+
+TESTING:
+
+CUDA_VISIBLE_DEVICES=0 python3 example/spsDoor.py -a hg --stacks 2 --blocks 1 --checkpoint checkpoint/spsdoor/conv1_stride_2/hg2 --resume checkpoint/spsdoor/conv1_stride_2/hg2/model_best.pth.tar -e -d
+
+---------------------------------------
+TRAINING 1024 in -> 256x256 output dim :
+
+CUDA_VISIBLE_DEVICES=0 python3 example/spsDoor.py -a hg --stacks 1 --blocks 1 --checkpoint checkpoint/spsdoor/conv1_stride_2/hg1 --epoch 200 --model_inplane 64 --train-batch 2 --test-batch 1
+
+TESTING 256x256 output dim :
+
+CUDA_VISIBLE_DEVICES=0 python3 example/spsDoor.py -a hg --stacks 1 --blocks 1 --checkpoint checkpoint/spsdoor/conv1_stride_2/hg1 --epoch 200 --model_inplane 64 --test-batch 1 --resume checkpoint/spsdoor/conv1_stride_2/hg1/model_best.pth.tar -e -d
+--------------------------------------------------------------------------------------
+
+CUDA_VISIBLE_DEVICES=0 python3 example/spsDoor.py -a hg --stacks 1 --blocks 1 --checkpoint checkpoint/spsdoor/conv1_stride1/hg1 --epoch 200 --model_inplane 64 --train-batch 2 --test-batch 1
+
+CUDA_VISIBLE_DEVICES=0 python3 example/spsDoor.py -a hg --stacks 1 --blocks 1 --checkpoint checkpoint/spsdoor/conv1_stride1/hg1 --resume checkpoint/spsdoor/conv1_stride1/hg1/model_best.pth.tar -e -d --test-batch 1

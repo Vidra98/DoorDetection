@@ -1,0 +1,3 @@
+Test with display
+
+python3 ./example/spsDoor.py --checkpoint checkpoint/spsdoor/conv1_stride1/hg1b1_aug_data2/ --resume checkpoint/spsdoor/conv1_stride1/hg1b1_aug_data2/model_best.pth.tar -e -d
