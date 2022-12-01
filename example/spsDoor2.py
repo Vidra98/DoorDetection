@@ -126,8 +126,8 @@ def main(args):
     print('\n Training')
         # Data loading code
     train_loader = torch.utils.data.DataLoader(
-        datasets.spsDoor('data/spsDoor/train/annotations/instances_default.json', 
-                        'data/spsDoor/train/images', train_data = True, 
+        datasets.spsDoor('data/spsDoor/train2/annotations/instances_default.json', 
+                        'data/spsDoor/train2/images', train_data = True, 
                         sigma=args.sigma, label_type=args.label_type,
                         inp_res=inp_res, out_res=out_res, data_aug=args.data_aug),
         batch_size=args.train_batch, shuffle=True,
@@ -297,18 +297,20 @@ def test(loader, model, criterion, num_classes, debug=False, flip=False, out_res
             acc = accuracy(output[0], target, idx)
             
             score_map = output[-1].cpu()
+                
             # generate predictions
             gt = door_final_preds(target.cpu(), [meta['width'], meta['height']], [out_res, out_res])
             preds = door_final_preds(score_map.cpu(), [meta['width'], meta['height']], [out_res, out_res])
-            
+
             for n in range(score_map.cpu().size(0)):
                 predictions[meta['index'][n], :, :] = preds[n, :, :].to("cpu")
                 ground_truth[meta['index'][n], :, :] = gt[n, :, :].to("cpu")
 
             if debug:
-                plt_res=[torch.tensor([inp_res]), torch.tensor([inp_res])]
-                gt_plt = door_final_preds(target.cpu(), plt_res, [out_res, out_res])
-                preds_plt = door_final_preds(score_map.cpu(), plt_res, [out_res, out_res])
+                plt_res=[torch.tensor([out_res]), torch.tensor([out_res])]
+                gt_plt = door_final_preds(target.cpu(), plt_res, [inp_res, inp_res])
+                preds_plt = door_final_preds(score_map.cpu(), plt_res, [inp_res, inp_res])
+
                 gt_batch_img = batch_with_heatmap(input, target.cpu(), gt_plt[n, :, :].to("cpu"))
                 pred_batch_img = batch_with_heatmap(input, score_map.cpu(), preds_plt[n, :, :].to("cpu"))
 

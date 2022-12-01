@@ -1,0 +1,20 @@
+#!/bin/bash
+cd ..
+export PYTHONPATH=".:$PYTHONPATH"
+
+# #inplane 
+# #python3 example/spsDoor.py -a hg --checkpoint checkpoint/spsdoor/c1_s1_2_i_64/io_512_inplane_64 --train-batch 1 --model_inplane 64 --epoch 100 
+
+# #python3 example/spsDoor.py -a hg --checkpoint checkpoint/spsdoor/c1_s1_2_i_64/io_512_inplane_64_aug --train-batch 1 --model_inplane 64 --epoch 200 --resume checkpoint/spsdoor/c1_s1_2_i_64/io_512_inplane_64/model_best.pth.tar -aug
+
+# #python3 example/spsDoor.py -a hg --checkpoint checkpoint/spsdoor/c1_s1_2_i_32/io_512_inplane_32 --train-batch 1 --model_inplane 32 --epoch 100 
+
+# python3 example/spsDoor.py -a hg --checkpoint checkpoint/spsdoor/c1_s1_2_i_32/io_512_inplane_32_aug --train-batch 1 --model_inplane 32 --epoch 200 --resume checkpoint/spsdoor/c1_s1_2_i_32/io_512_inplane_32/model_best.pth.tar -aug
+
+# python3 example/spsDoor.py -a hg --checkpoint checkpoint/spsdoor/c1_s1_2_i_128/io_512_inplane_96 --train-batch 1 --model_inplane 128 --epoch 100
+
+# python3 example/spsDoor.py -a hg --checkpoint checkpoint/spsdoor/c1_s1_2_i_128/io_512_inplane_96_aug --train-batch 1 --model_inplane 128 --epoch 200 --resume checkpoint/spsdoor/c1_s1_2_i_128/io_512_inplane_128/model_best.pth.tar -aug
+
+
+
+python3 example/spsDoor.py -a hg --checkpoint checkpoint/spsdoor/hourglass_3/io_512_inplane_64 --train-batch 1 --model_inplane 64 --epoch 100

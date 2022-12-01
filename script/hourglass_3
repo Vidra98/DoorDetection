@@ -1,0 +1,39 @@
+#!/bin/bash
+cd ..
+export PYTHONPATH=".:$PYTHONPATH"
+
+#inplane 
+python3 example/spsDoor.py -a hg --checkpoint checkpoint/spsdoor/hourglass_3/32_feats/io_512_inplane_8 --train-batch 2 --test-batch 2 --model_inplane 8 --epoch 250 --num_feats 32
+
+python3 example/spsDoor2.py -a hg --checkpoint checkpoint/spsdoor/hourglass_3/32_feats/io_512_inplane_8 --train-batch 2 --test-batch 2 --model_inplane 8 --epoch 500 --num_feats 32 --resume checkpoint/spsdoor/hourglass_3/32_feats/io_512_inplane_8/checkpoint.pth.tar
+
+python3 example/spsDoor.py -a hg --checkpoint checkpoint/spsdoor/hourglass_3/32_feats/io_512_inplane_8_aug --train-batch 2 --test-batch 2 --model_inplane 8 --epoch 650 --resume checkpoint/spsdoor/hourglass_3/32_feats/io_512_inplane_8/checkpoint.pth.tar -aug --num_feats 32
+
+
+python3 example/spsDoor.py -a hg --checkpoint checkpoint/spsdoor/hourglass_3/32_feats/io_512_inplane_16 --train-batch 2 --test-batch 2 --model_inplane 16 --epoch 250 --num_feats 32
+
+python3 example/spsDoor2.py -a hg --checkpoint checkpoint/spsdoor/hourglass_3/32_feats/io_512_inplane_16 --train-batch 2 --test-batch 2 --model_inplane 16 --epoch 500 --num_feats 32 --resume checkpoint/spsdoor/hourglass_3/32_feats/io_512_inplane_16/checkpoint.pth.tar
+
+python3 example/spsDoor.py -a hg --checkpoint checkpoint/spsdoor/hourglass_3/32_feats/io_512_inplane_16_aug --train-batch 2 --test-batch 2 --model_inplane 16 --epoch 650 --resume checkpoint/spsdoor/hourglass_3/32_feats/io_512_inplane_16/checkpoint.pth.tar -aug --num_feats 32
+
+
+python3 example/spsDoor.py -a hg --checkpoint checkpoint/spsdoor/hourglass_3/16_feats/io_512_inplane_32 --train-batch 2 --test-batch 2 --model_inplane 32 --epoch 250 --num_feats 16
+
+python3 example/spsDoor2.py -a hg --checkpoint checkpoint/spsdoor/hourglass_3/16_feats/io_512_inplane_32 --train-batch 2 --test-batch 2 --model_inplane 32 --epoch 500 --num_feats 16 --resume checkpoint/spsdoor/hourglass_3/16_feats/io_512_inplane_32/checkpoint.pth.tar
+
+python3 example/spsDoor.py -a hg --checkpoint checkpoint/spsdoor/hourglass_3/16_feats/io_512_inplane_32_aug --train-batch 2 --test-batch 2 --model_inplane 32 --epoch 750 --resume checkpoint/spsdoor/hourglass_3/16_feats/io_512_inplane_32/checkpoint.pth.tar -aug --num_feats 16
+
+
+python3 example/spsDoor.py -a hg --checkpoint checkpoint/spsdoor/hourglass_3/8_feats/io_512_inplane_32 --train-batch 2 --test-batch 2 --model_inplane 32 --epoch 250 --num_feats 8
+
+python3 example/spsDoor2.py -a hg --checkpoint checkpoint/spsdoor/hourglass_3/8_feats/io_512_inplane_32 --train-batch 2 --test-batch 2 --model_inplane 32 --epoch 500 --num_feats 8 --resume checkpoint/spsdoor/hourglass_3/8_feats/io_512_inplane_32/checkpoint.pth.tar
+
+python3 example/spsDoor.py -a hg --checkpoint checkpoint/spsdoor/hourglass_3/8_feats/io_512_inplane_32_aug --train-batch 2 --test-batch 2 --model_inplane 32 --epoch 750 --resume checkpoint/spsdoor/hourglass_3/8_feats/io_512_inplane_32/checkpoint.pth.tar -aug --num_feats 8
+
+
+#python3 example/spsDoor.py -a hg --checkpoint checkpoint/spsdoor/hourglass_3/io_512_inplane_32 --train-batch 2 --test-batch 2 --model_inplane 32 --epoch 150 --num_feats 32 --test-batch 3
+
+#python3 example/spsDoor.py -a hg --checkpoint checkpoint/spsdoor/hourglass_3/io_512_inplane_32_aug --train-batch 2 --test-batch 2 --model_inplane 32 --epoch 300 --resume checkpoint/spsdoor/hourglass_3/io_512_inplane_32/model_best.pth.tar -aug --num_feats 32
+
+
+

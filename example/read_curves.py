@@ -36,7 +36,7 @@ def main(args):
 
     plot_figure(epoch, tr_loss, 'loss', 'Epoch', 'Training loss', ['training', 'validation'])
     plot_figure(epoch, val_loss, 'loss', 'Epoch', 'Validation loss', ['training', 'validation'])
-    plt.savefig(args.path+os.sep+'loss.png')
+    plt.savefig(args.path+os.sep+'loss.png')    
     plot_figure(epoch, tr_acc, 'accuracy', 'Epoch', 'Training accuracy', ['Training', 'Validation'])
     plot_figure(epoch, val_acc, 'accuracy', 'Epoch', 'Validation accuracy', ['Training', 'Validation'])
     plt.savefig(args.path+os.sep+'accuracy.png')
@@ -55,14 +55,7 @@ def plot_figure(x_data, y_data, title='', xlabels='', ylabel='', legend=''):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Training loss and accuracy curves')
-    parser.add_argument('--arch', '-a', metavar='ARCH', default='hg',
-                        choices=model_names,
-                        help='model architecture: ' +
-                            ' | '.join(model_names) +
-                            ' (default: resnet18)')
-    parser.add_argument('-c', '--path', default='', type=str, metavar='PATH',
-                        help='path to save model file (default: \'\')')
-    parser.add_argument('-d', '--debug', dest='debug', action='store_true',
-                        help='show intermediate results')
+    parser.add_argument('-p', '--path', default='', type=str, metavar='PATH', required=True,
+                        help='path to save model file')
     main(parser.parse_args())
 

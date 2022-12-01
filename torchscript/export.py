@@ -11,10 +11,11 @@ model_names = sorted(name for name in models.__dict__
     and callable(models.__dict__[name]))
 
 # select proper device to run
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+#device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cpu")
 def main(args):
-    
+    print("this script has been checked for torch 1.13.0+cpu, current version of torch is {}".format(
+        torch.__version__))
     # create model
     print("==> creating model '{}', stacks={}, blocks={}".format(args.arch, args.stacks, args.blocks))
 
@@ -29,9 +30,10 @@ def main(args):
 
     if args.inport_only is False:
         model = models.__dict__[args.arch](num_stacks=args.stacks, num_blocks=args.blocks, 
-                                        num_classes=args.num_classes, model_inplane=args.model_inplane)
+                                        num_classes=args.num_classes, model_inplane=args.num_inplane,
+                                        num_feats=args.num_feats)
 
-        checkpoint = torch.load(args.checkpoint + "model_best.pth.tar", map_location=torch.device(device))
+        checkpoint = torch.load(args.checkpoint + "checkpoint.pth.tar", map_location=torch.device(device))
         model = torch.nn.DataParallel(model).to(device)
         model.load_state_dict(checkpoint['state_dict'], strict=False)
         model.eval()
@@ -82,7 +84,6 @@ def main(args):
     
     
     plt.show()
-    plt.waitforbuttonpress()
     print("saved and loaded successfully, torch version is {}, device is {}".format(torch.__version__, device))
     
 if __name__ == "__main__":
@@ -91,12 +92,14 @@ if __name__ == "__main__":
                         help='Number of hourglasses to stack')
     parser.add_argument('-b', '--blocks', default=1, type=int, metavar='N',
                         help='Number of residual modules at each location in the hourglass')
-    parser.add_argument('--num-classes', default=4, type=int, metavar='N',
+    parser.add_argument('--num_classes', default=4, type=int, metavar='N',
                         help='Number of keypoints')
-    parser.add_argument('--model_inplane', default=64, type=int, metavar='N',
+    parser.add_argument('--num_inplane', default=32, type=int, metavar='N',
                         help='Number of keypoints')
-    parser.add_argument('--checkpoint', type=str, metavar='PATH', required=True,
-                        default="checkpoint/spsdoor/conv1_stride1/hg1b1_aug_data2/")
+    parser.add_argument('--num_feats', default=32, type=int, metavar='N',
+                        help='Number of features in the hourglass')
+    parser.add_argument('--checkpoint', type=str, metavar='PATH',
+                        default="checkpoint/spsdoor/hourglass_1/conv1_stride1/hg1b1_aug_data2/")
     parser.add_argument('--arch', '-a', metavar='ARCH', default='hg', choices=model_names,
                         help='model architecture: ' + ' | '.join(model_names) +
                         ' (default: resnet18)')
@@ -107,4 +110,3 @@ if __name__ == "__main__":
     # Parse args
     args = parser.parse_args()
     main(args)
-

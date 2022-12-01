@@ -97,12 +97,12 @@ class Hourglass(nn.Module):
 
 class HourglassNet(nn.Module):
     '''Hourglass model from Newell et al ECCV 2016'''
-    def __init__(self, block, num_stacks=2, num_blocks=4, num_classes=4, inplanes=64, feats=128):
+    def __init__(self, block, num_stacks=2, num_blocks=4, num_classes=4, inplanes=64):
         super(HourglassNet, self).__init__()
 
         self.inplanes = inplanes
         ##print('inplane', self.inplanes)
-        self.num_feats = feats
+        self.num_feats = 64
         self.num_stacks = num_stacks
         self.conv1 = nn.Conv2d(3, self.inplanes, kernel_size=7, stride=1, padding=3,
                                bias=True)
@@ -147,6 +147,12 @@ class HourglassNet(nn.Module):
 
         return nn.Sequential(*layers)
 
+    def _make_up(self, inplanes, outplanes):
+        up = nn.ConvTranspose2d(inplanes, outplanes, kernel_size=2, stride=2)
+        return nn.Sequential(
+                up,
+            )
+    
     def _make_fc(self, inplanes, outplanes):
         bn = nn.BatchNorm2d(inplanes)
         conv = nn.Conv2d(inplanes, outplanes, kernel_size=1, bias=True)
@@ -158,20 +164,30 @@ class HourglassNet(nn.Module):
 
     def forward(self, x):
         out = []
+        #print('in',x.shape)
         x = self.conv1(x)
         x = self.bn1(x)
         x = self.relu(x)
+        #print('1',x.shape)
 
         x = self.layer1(x)
-        x = self.maxpool(x)
+        #print('2',x.shape)
+        #x = self.maxpool(x)
+        #print('3',x.shape)
         x = self.layer2(x)
+        #print('4',x.shape)
         x = self.layer3(x)
+        #print('5',x.shape)
 
         for i in range(self.num_stacks):
             y = self.hg[i](x)
+            #print('6',y.shape)
             y = self.res[i](y)
+            #print('7',y.shape)
             y = self.fc[i](y)
+            #print('8',y.shape)
             score = self.score[i](y)
+            #print('9',score.shape)
             out.append(score)
             if i < self.num_stacks-1:
                 fc_ = self.fc_[i](y)
@@ -183,6 +199,5 @@ class HourglassNet(nn.Module):
 
 def hg(**kwargs):
     model = HourglassNet(Bottleneck, num_stacks=kwargs['num_stacks'], num_blocks=kwargs['num_blocks'],
-                         num_classes=kwargs['num_classes'], inplanes=kwargs['model_inplane'],
-                         feats=kwargs['num_feats'])
+                         num_classes=kwargs['num_classes'], inplanes=kwargs['model_inplane'])
     return model

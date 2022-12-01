@@ -138,7 +138,7 @@ def show_sample(inputs, target):
         imshow(out)
         plt.show()
 
-def sample_with_heatmap(inp, out, num_rows=2, parts_to_show=None):
+def sample_with_heatmap(inp, out, pred=None, num_rows=2, parts_to_show=None):
     inp = to_numpy(inp * 255)
     out = to_numpy(out)
 
@@ -146,6 +146,10 @@ def sample_with_heatmap(inp, out, num_rows=2, parts_to_show=None):
     for i in range(3):
         img[:, :, i] = inp[i, :, :]
 
+    img_tmp=img.copy()
+    if pred != None:
+        for point in pred :
+                img = cv2.circle(img, tuple([int(i) for i in point]), 5, (255,0,0), 2)
     if parts_to_show is None:
         parts_to_show = np.arange(out.shape[0])
 
@@ -157,7 +161,7 @@ def sample_with_heatmap(inp, out, num_rows=2, parts_to_show=None):
     full_img[:img.shape[0], :img.shape[1]] = img
 
     # inp_small = np.imresize(img, [size, size])
-    inp_small = cv2.resize(img, dsize=(size, size), interpolation=cv2.INTER_LINEAR)
+    inp_small = cv2.resize(img_tmp, dsize=(size, size), interpolation=cv2.INTER_LINEAR)
     # Set up heatmap display for each part
     for i, part in enumerate(parts_to_show):
         part_idx = part
@@ -184,11 +188,11 @@ def sample_with_heatmap(inp, out, num_rows=2, parts_to_show=None):
 
     return full_img
 
-def batch_with_heatmap(inputs, outputs, mean=torch.Tensor([0.5, 0.5, 0.5]), num_rows=2, parts_to_show=None):
+def batch_with_heatmap(inputs, outputs, prediction=[], mean=torch.Tensor([0.5, 0.5, 0.5]), num_rows=2, parts_to_show=None):
     batch_img = []
     for n in range(min(inputs.size(0), 4)):
         inp = inputs[n] #+ mean.view(3, 1, 1).expand_as(inputs[n])
         batch_img.append(
-            sample_with_heatmap(inp.clamp(0, 1), outputs[n], num_rows=num_rows, parts_to_show=parts_to_show)
+            sample_with_heatmap(inp.clamp(0, 1), outputs[n], pred=prediction, num_rows=num_rows, parts_to_show=parts_to_show)
         )
     return np.concatenate(batch_img)

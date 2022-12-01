@@ -104,7 +104,6 @@ class spsDoor(data.Dataset):
 
         img_path = os.path.join(self.img_folder, im['file_name'])
         # pts[:, 0:2] -= 1  # Convert pts to zero based
-
         img = door_load_image(img_path, self.inp_res)  # CxHxW
         r = 0
         if self.is_train:
@@ -141,7 +140,8 @@ class spsDoor(data.Dataset):
         #print('target shape ', target.shape, 'type ', target.dtype, '\n', target)
 
         if self.data_augmentation:
-            transformed = self.transform(image=inp.to(self.device).numpy().transpose([1, 2, 0]), mask0=target[0].numpy(), mask1=target[1].numpy(),
+            
+            transformed = self.transform(image=inp.to("cpu").numpy().transpose([1, 2, 0]), mask0=target[0].numpy(), mask1=target[1].numpy(),
                 mask2=target[2].numpy(), mask3=target[3].numpy())
 
             #self._visualize(inp.numpy().transpose([1, 2, 0]))
@@ -153,7 +153,7 @@ class spsDoor(data.Dataset):
 
             #self._visualize(transformed['image'])
 
-            sum_mask=0.3*(target[0]+target[1]+target[2]+target[3])
+            #sum_mask=0.3*(target[0]+target[1]+target[2]+target[3])
 
             #self._visualize(sum_mask.numpy())
             #print('inp shape ', inp.shape, 'type ', inp.dtype, '\n', inp)

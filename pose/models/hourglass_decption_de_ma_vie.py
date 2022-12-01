@@ -97,7 +97,7 @@ class Hourglass(nn.Module):
 
 class HourglassNet(nn.Module):
     '''Hourglass model from Newell et al ECCV 2016'''
-    def __init__(self, block, num_stacks=2, num_blocks=4, num_classes=4, inplanes=64, feats=128):
+    def __init__(self, block, num_stacks=2, num_blocks=4, num_classes=4, inplanes=32, feats=32):
         super(HourglassNet, self).__init__()
 
         self.inplanes = inplanes
@@ -163,7 +163,7 @@ class HourglassNet(nn.Module):
         x = self.relu(x)
 
         x = self.layer1(x)
-        x = self.maxpool(x)
+        #x = self.maxpool(x)
         x = self.layer2(x)
         x = self.layer3(x)
 
@@ -184,5 +184,5 @@ class HourglassNet(nn.Module):
 def hg(**kwargs):
     model = HourglassNet(Bottleneck, num_stacks=kwargs['num_stacks'], num_blocks=kwargs['num_blocks'],
                          num_classes=kwargs['num_classes'], inplanes=kwargs['model_inplane'],
-                         feats=kwargs['num_feats'])
+                         feats=['num_feats'])
     return model

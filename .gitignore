@@ -1,8 +1,16 @@
 # Byte-compiled / optimized / DLL files
 checkpoint
 data
+cpp_reader/build/*
 dev
+
+#model weight
 *.pth.tar
+*.tar.xz
+*.mat
+
+#data
+data/spsDoor
 data/mpii/images
 !data/mpii/mean.pth.tar
 *.json
