@@ -28,11 +28,11 @@ int main(int argc, const char* argv[]) {
   std::vector<torch::jit::IValue>input;
   
   torch::Tensor out_tensor, kp;
-  int out_res[2] = {1280, 720};
+  int out_res[2];
   int model_res = 256;
 
   std::string imagePath;
-  cv::VideoCapture cap("/home/victor/Desktop/python/Visp_3D_model/video/low_spped/undistort1.mp4");
+  cv::VideoCapture cap("/home/victor/Desktop/python/Visp_3D_model/build/model/door_front/my_phone/video_2.mp4");
 
   // Check if camera opened successfully
   if(!cap.isOpened()){
@@ -57,6 +57,11 @@ int main(int argc, const char* argv[]) {
   cv::Mat frame;
   // Capture frame-by-frame
   cap >> frame;
+
+  cv::Size s = frame.size();
+  out_res[1] = s.height + 1;
+  out_res[0] = s.width + 1;
+
   int frame_count = 0;
   int img_rate = 5;
 
@@ -114,7 +119,7 @@ int main(int argc, const char* argv[]) {
 
 
       // Press  ESC on keyboard to exit
-      char c=(char)cv::waitKey(30);
+      char c=(char)cv::waitKey(0);
       if(c==27)
         break;
     }
@@ -126,7 +131,7 @@ int main(int argc, const char* argv[]) {
 
   imagePath = "/home/victor/Desktop/simulation/gazeboroboticsimulator/src/sps/worlds/gate/1.png.001.png";
   cv::Mat image = cv::imread(imagePath);
-  cv::Size s = image.size();
+  s = image.size();
   out_res[1] = s.height + 1;
   out_res[0] = s.width + 1;
   std::cout<<"out_res: "<<out_res[0]<<", "<<out_res[1]<<std::endl;

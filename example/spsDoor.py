@@ -56,11 +56,6 @@ def main(args):
 
     optimizer = torch.optim.Adam(model.parameters(),
                                   lr=args.lr)
-    # optimizer = torch.optim.RMSprop(model.parameters(),
-    #                             lr=args.lr,
-    #                             momentum=args.momentum,
-    #                             weight_decay=args.weight_decay)
-
     #define the input and output resolution of the model
     out_res = args.output_res
     inp_res = 2*out_res
