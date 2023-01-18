@@ -33,8 +33,10 @@ In our case, we want to identify the doors keypoints to do pose estimation later
 To be able to train the model, the first step is to annotate the dataset. This is done using CVAT and custom video of the gate in the mockup and later on in the tunnel.
 
 The point are always annotated in the order : bottom left -> top left -> top right -> bottom right
+
 ### Folder architecture
 
+```
 ├── acces_token.txt
 ├── checkpoint
 │   └── spsdoor
@@ -107,7 +109,7 @@ The point are always annotated in the order : bottom left -> top left -> top rig
 │   └── training_512
 └── torchscript
     └── export.py
-
+```
 
 ### Training
 Run the following command in terminal to train an 1-stack of hourglass network on the door dataset.
