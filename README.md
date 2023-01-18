@@ -6,6 +6,7 @@ Some codes for data preparation and augmentation are brought from the [Stacked h
 
 This code has been adapted to do door detection in the Super Proton Synchrotron accelerator. The main interest there is to have a very lightweight network (3.56M parameter) as the robot ressources are very scarced.
 
+![example](docs/example1.png)
 .. figure:: docs/example1.png
 
 .. figure:: docs/example2.png
