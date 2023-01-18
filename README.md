@@ -35,35 +35,107 @@ To be able to train the model, the first step is to annotate the dataset. This i
 The point are always annotated in the order : bottom left -> top left -> top right -> bottom right
 ### Folder architecture
 
+'''
+├── acces_token.txt
+├── checkpoint
+│   └── spsdoor
+│       ├── hourglass_1
+│       │   ├── 16_feats
+│       │   │   ├── i256_o512_inplane_32
+│       │   │   │   ├── checkpoint.pth.tar
+│       │   │   │   ├── log.eps
+│       │   │   │   ├── log.txt
+│       │   │   │   ├── model_best.pth.tar
+│       │   │   │   ├── model_dict.ckpt
+│       │   │   │   ├── preds_best.mat
+│       │   │   │   └── preds.mat
+│       │   │   └── i256_o512_inplane_32_aug
+│       │   ├── 32_feats
+│       │   └── info
+│       ├── hourglass_2
+│       └── hourglass_3
+├── command.txt
+├── cpp_reader
+│   ├── build
+│   ├── CMakeLists.txt
+│   └── main.cpp
+├── data
+│   └── spsDoor
+│       ├── distorted_dataset.tar.xz
+│       ├── mean.pth.tar
+│       ├── test
+│       │   ├── annotations
+│       │   │   └── instances_default.json
+│       │   └── images
+│       │       ├── door_0.jpg
+│       │       ...
+│       │       └── door_46.jpg
+│       ├── train
+│       │   ├── annotations
+│       │   │   └── instances_default.json
+│       │   └── images
+│       │       ├── door_0.jpg
+│       │       ...
+│       │       └── door_262.jpg
+│       ├── train2
+│       │   ├── annotations
+│       │   │   └── instances_default.json
+│       │   └── images
+│       │       ├── door_0.jpg
+│       │       ...
+│       │       └── door_222.jpg
+│       ├── undistorted_dataset.tar.xz
+│       └── val
+│           ├── annotations
+│           │   └── instances_default.json
+│           └── images
+│               ├── door_0.jpg
+│               │    ...
+│               └── door_56.jpg
+├── example
+│   ├── bidon.py
+│   ├── huh.py
+│   ├── lsp.py
+│   ├── read_curves.py
+│   ├── spsDoor2.py
+│   └── spsDoor.py
+├── LICENSE
+├── modif.txt
+├── README.md
+├── script
+│   ├── hourglass_1
+│   ├── hourglass_3
+│   └── training_512
+└── torchscript
+    └── export.py
+'''
+
 ### Training
 Run the following command in terminal to train an 1-stack of hourglass network on the door dataset.
-**a modifier**
-```
-CUDA_VISIBLE_DEVICES=0 python example/mpii.py -a hg --stacks 1 --blocks 1 --checkpoint checkpoint/mpii/hg8 -j 4
-```
-**a modifier**
 
-Here,
-* `CUDA_VISIBLE_DEVICES=0` identifies the GPU devices you want to use. For example, use `CUDA_VISIBLE_DEVICES=0,1` if you want to use two GPUs with ID `0` and `1`.
-* `-j` specifies how many workers you want to use for data loading.
-* `--checkpoint` specifies where you want to save the models, the log and the predictions to.
+```
+python3 ./example/spsDoor.py --checkpoint PATH_TO_CHECKPOINT_FOLDER --resume PATH_TO_CHECKPOINT_FOLDER/model_best.pth.tar -a
+```
+example :
+```
+python3 ./example/spsDoor.py --checkpoint checkpoint/spsdoor/hourglass_1/conv1_stride1/hg1b1_aug_data2/ --resume checkpoint/spsdoor/hourglass_1/conv1_stride1/hg1b1_aug_data2/model_best.pth.tar -a
+```
 
-Please refer to the `example/**a modifier**.py` for the supported options/arguments.
+Please refer to the --help argument for a list of the supported options/arguments.
 
 ### Testing
 
-To test the network you can run :
+To test the network you can run the same command as training but adding the argument:
 
 For a quick start, you can retrain the network using the command 
 
 ```
+python3 ./example/spsDoor.py --checkpoint checkpoint/spsdoor/hourglass_1/conv1_stride1/hg1b1_aug_data2/ --resume checkpoint/spsdoor/hourglass_1/conv1_stride1/hg1b1_aug_data2/model_best.pth.tar -e -d
 ```
 
-```
-CUDA_VISIBLE_DEVICES=0 python example/mpii.py -a hg --stacks 2 --blocks 1 --checkpoint checkpoint/mpii/hg_s2_b1 --resume checkpoint/mpii/hg_s2_b1/model_best.pth.tar -e -d
-```
+### Important argument
 
-* `-a` specifies a network architecture
+* `-aug` augment the data
 * `--resume` will load the weight from a specific model
 * `-e` stands for evaluation only
 * `-d` will visualize the network output. It can be also used during training
