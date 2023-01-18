@@ -35,7 +35,6 @@ To be able to train the model, the first step is to annotate the dataset. This i
 The point are always annotated in the order : bottom left -> top left -> top right -> bottom right
 ### Folder architecture
 
-'''
 ├── acces_token.txt
 ├── checkpoint
 │   └── spsdoor
@@ -108,7 +107,7 @@ The point are always annotated in the order : bottom left -> top left -> top rig
 │   └── training_512
 └── torchscript
     └── export.py
-'''
+
 
 ### Training
 Run the following command in terminal to train an 1-stack of hourglass network on the door dataset.
